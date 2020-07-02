@@ -57,8 +57,8 @@ DefaultDropdownItem.propTypes = {
     nameAttribute: PropTypes.string
 };
 
-const NormalList = ({ items, selectedItems, selectItem, idAttribute, nameAttribute, DropdownItem }) => {
-    return <List items={items} 
+const NormalList = ({ items, selectedItems, selectItem, idAttribute, nameAttribute, DropdownItem, ...restProps }) => {
+    return <List items={items} {...restProps}
         ListItem={DropdownItem} selectedItems={selectedItems} selectItem={selectItem} 
         idAttribute={idAttribute} nameAttribute={nameAttribute} />;
 };
@@ -102,7 +102,8 @@ const Dropdown = (props) => {
         getUrlParams,
         showCreateCTA,
         createCTAComponent,
-        onCreateCTAClick
+        onCreateCTAClick,
+        ...restProps
     } = props;
     const [ searchQuery, setSearchQuery ] = useState("");
     const debouncedFn = useRef();
@@ -217,7 +218,7 @@ const Dropdown = (props) => {
                 </div>}
                 {paginationType === "SERVER" ? 
                     <ServerPaginatedDDList {...commonAttributes} {...serverListAttrs} /> : 
-                    <NormalList {...commonAttributes} 
+                    <NormalList {...commonAttributes} {...restProps}
                         items={getFilteredOptions(options, searchQuery, nameAttribute)} />}
                 {showCreateCTA && <div className="RCB-dd-create-cta" onClick={onCreateCTAClick}>{createCTAComponent}</div>}
             </InlineModalBody>
