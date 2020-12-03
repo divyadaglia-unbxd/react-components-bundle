@@ -3,12 +3,13 @@ import PropTypes from "prop-types";
 import List from "../List";
 
 const AccordianItem = (props) => {
-    const { itemData } = props;
-    const { open, titleComponent, bodyComponent } = itemData;
+    const { itemData, onClick } = props;
+    const { open, titleComponent, bodyComponent, id } = itemData;
     const [isOpen, setIsOpen] = useState(open);
 
     const onItemClick = () => {
         setIsOpen(!isOpen);
+        typeof onClick === "function" ? onClick(id) : "";
     };
 
     useEffect(() => {
@@ -25,7 +26,8 @@ AccordianItem.propTypes = {
     itemData: PropTypes.shape({
         titleComponent: PropTypes.instanceOf(Object).isRequired,
         bodyComponent: PropTypes.instanceOf(Object).isRequired,
-        open: PropTypes.bool
+        open: PropTypes.bool,
+        id: PropTypes.string
     }),
     onClick: PropTypes.func
 };
@@ -33,17 +35,19 @@ AccordianItem.propTypes = {
 const Accordian = (props) => {
     const {
         className,
-        items
+        items,
+        onTitleClick
     } = props;
 
     return (<div className={`RCB-accordian ${className}`}>
-        <List items={items} ListItem={AccordianItem} />    
+        <List items={items} ListItem={AccordianItem} onClick={onTitleClick} />    
     </div>);
 };
 
 Accordian.propTypes = {
     /** Pass any additional classNames to Accordian */
     className: PropTypes.string,
+    onTitleClick: PropTypes.func,
     /** Array of accordian items. Each object in array should contain {id, titleComponent: <Component />, bodyComponent: <Component />} */
     items: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
